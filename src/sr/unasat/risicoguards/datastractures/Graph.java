@@ -24,7 +24,7 @@ public class Graph {
 
     public void addEdge(int start, int end, int weight){
         adjMat[start][end] = weight;
-        adjMat[end][start] = weight;
+//        adjMat[end][start] = weight;
     }
 
     public void displayVertex(int v){

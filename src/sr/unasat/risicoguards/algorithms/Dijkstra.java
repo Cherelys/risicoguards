@@ -102,18 +102,17 @@ public class Dijkstra {
     }
 
     public void displayPaths(){
-        System.out.print("[");
         for (int j=0; j<graph.getnVerts(); j++){
-            System.out.print(graph.getVertexList()[j].label+ "=");
+            System.out.print(graph.getVertexList()[0].label + "->");
+            System.out.print(graph.getVertexList()[j].label+ "="); //B=
             if (sPath[j].distance == INFINITY) {
-                System.out.print("inf,");
+                System.out.print("(inf"); //inf
             }else {
-                System.out.print(sPath[j].distance + ",");
+                System.out.print("(" + sPath[j].distance); //50
             }
             char parent = graph.getVertexList()[sPath[j].parentVert].label;
-            System.out.print("("+ parent +")");
+            System.out.print(" via "+ parent +"), "); //(A)
         }
-        System.out.println("]");
     }
 
 }
