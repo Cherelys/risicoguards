@@ -18,13 +18,13 @@ public class App {
         graph.addVertex('F');
         graph.addVertex('G');
 
-        graph.addEdge(0,1, 1); //AB
-        graph.addEdge(0,3, 6); //AD
-        graph.addEdge(1,2, 5); //BC
-        graph.addEdge(3,4, 4); //DE
-        graph.addEdge(3,5, 2); //DF
-        graph.addEdge(4,6, 3); //EG
-        graph.addEdge(5,6, 9); //FG
+        graph.addEdge(0,1,1); //AB
+        graph.addEdge(0,3,6); //AD
+        graph.addEdge(1,2,5); //BC
+        graph.addEdge(3,4,4); //DE
+        graph.addEdge(3,5,2); //DF
+        graph.addEdge(4,6,3); //EG
+        graph.addEdge(5,6,9); //FG
 
         //2. bfs searches
         System.out.print("BFS Visits: ");
@@ -45,5 +45,8 @@ public class App {
         System.out.println();
 
         //5. dijkstra lang
+        System.out.print("Dijkstra lang: ");
+        dijkstra.longestPath();
+        System.out.println();
     }
 }

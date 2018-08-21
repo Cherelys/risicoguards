@@ -4,11 +4,13 @@ import sr.unasat.risicoguards.datastractures.DistPar;
 import sr.unasat.risicoguards.datastractures.Graph;
 
 import static sr.unasat.risicoguards.datastractures.Graph.INFINITY;
+import static sr.unasat.risicoguards.datastractures.Graph.NINFINITY;
 
 public class Dijkstra {
     private Graph graph;
     private int currentVert; //current vertex
     private DistPar sPath[]; // array for shortest-path data
+    private DistPar lPath[]; // array for longest-path data
     private int nTree;     // number of Verts in tree
     private int startToCurrent; //distance to currentVert
 
@@ -16,6 +18,7 @@ public class Dijkstra {
         this.graph = graph;
         nTree = 0;
         sPath = new DistPar[Graph.MAX_VERTS];   // shortest paths
+        lPath = new DistPar[Graph.MAX_VERTS];   // longests paths
     }
 
     public void shortestPath(){  //find all shortes path
@@ -45,18 +48,60 @@ public class Dijkstra {
             //put current vertex in tree
             graph.getVertexList()[currentVert].isInTree = true;
             nTree++;
-            adjust_spath(); //update sPath[] array
+            adjustsPathMin(); //update sPath[] array
         }
 
-        displayPaths(); // display sPath[] contents
+        displayShortestPaths(); // display sPath[] contents
+        doClear(); //clear for next algorithm use
+    }
 
+    public void longestPath(){
+        int startTree = 0;
+        graph.getVertexList()[startTree].isInTree = true;
+        nTree = 1;
+
+        for (int j=0; j<graph.getnVerts(); j++){
+            int tempDist = graph.getAdjMat()[startTree][j]; //set temp distance accordign to adjacency matrix
+            tempDist = (tempDist == INFINITY) ? NINFINITY : tempDist;
+            lPath[j]= new DistPar(startTree,tempDist); //create new distpar and put in sPath
+        }
+
+        //until all vertices are in the tree
+        while (nTree < graph.getnVerts()){
+            int indexMax= getMax(); // get maximum from lPath
+            int maxDist = lPath[indexMax].distance;
+
+            if (maxDist == NINFINITY){ //if all infinite or in tree
+                System.out.println("there are unreachable vertices");
+                break; //lPath is complete
+            }else{
+                currentVert = indexMax; //reset current vert to closest vert
+                startToCurrent = lPath[indexMax].distance; //maximum distance from startTree is to currentVert, and is startToCurrent
+            }
+
+            //put current vertex in tree
+            graph.getVertexList()[currentVert].isInTree = true;
+            nTree++;
+            adjustsPathMax(); //update sPath[] array
+        }
+
+        displayLongestPaths(); // display sPath[] contents
+        doClear(); //clear for next algorithm use
+
+    }
+
+
+
+    private void doClear(){
         nTree = 0; //clear tree
+        currentVert = 0; //clear currentVert
+        startToCurrent = 0; //clear startToCurrent
         for (int j =0; j<graph.getnVerts(); j++) {
             graph.getVertexList()[j].isInTree = false;
         }
     }
 
-    public int getMin(){
+    private int getMin(){
         int minDist = INFINITY; //get entry from sPath with minimum distance assume minimum
         int indexMin = 0;
         for(int j=1; j<graph.getnVerts(); j++) {
@@ -69,7 +114,20 @@ public class Dijkstra {
         return indexMin; //return index of minimum
     }
 
-    public void adjust_spath() {
+    private int getMax(){
+        int maxDist = NINFINITY;
+        int indexMax = 0;
+        for(int j=1; j<graph.getnVerts(); j++) {
+            //for each vertex, if it's in tree and bigger than old one
+            if (!graph.getVertexList()[j].isInTree && lPath[j].distance > maxDist) {
+                maxDist = lPath[j].distance;
+                indexMax = j; //update minimum
+            }
+        }
+        return indexMax; //return index of minimum
+    }
+
+    private void adjustsPathMin() {
         //adjust values in shortest-path array sPath
         int column = 1; //skip starting vertex
         while (column < graph.getnVerts()) { //go across columns
@@ -101,7 +159,35 @@ public class Dijkstra {
         }
     }
 
-    public void displayPaths(){
+    private void adjustsPathMax() {
+        int column = 1;
+        while (column < graph.getnVerts()) {
+
+            //get distance from adjacency matrix
+            int currentToFringe = graph.getAdjMat()[currentVert][column];
+
+            //if column not adjacent skip
+            if(currentToFringe == INFINITY){
+                column++;
+                continue;
+            }
+
+            //sum up the start to current and current to fringe distance
+            int startToFringe = startToCurrent + currentToFringe;
+
+            //get current lpath distance
+            int lPathDist = lPath[column].distance;
+
+            //if start to fringe larger swap distance and parent in distpar array
+            if (startToFringe>lPathDist){
+                lPath[column].parentVert = currentVert;
+                lPath[column].distance = startToFringe;
+            }
+            column++;
+        }
+    }
+
+    private void displayShortestPaths(){
         for (int j=0; j<graph.getnVerts(); j++){
             System.out.print(graph.getVertexList()[0].label + "->");
             System.out.print(graph.getVertexList()[j].label+ "="); //B=
@@ -111,6 +197,20 @@ public class Dijkstra {
                 System.out.print("(" + sPath[j].distance); //50
             }
             char parent = graph.getVertexList()[sPath[j].parentVert].label;
+            System.out.print(" via "+ parent +"), "); //(A)
+        }
+    }
+
+    private void displayLongestPaths(){
+        for (int j=0; j<graph.getnVerts(); j++){
+            System.out.print(graph.getVertexList()[0].label + "->");
+            System.out.print(graph.getVertexList()[j].label+ "="); //B=
+            if (lPath[j].distance == NINFINITY) {
+                System.out.print("(inf"); //inf
+            }else {
+                System.out.print("(" + lPath[j].distance); //50
+            }
+            char parent = graph.getVertexList()[lPath[j].parentVert].label;
             System.out.print(" via "+ parent +"), "); //(A)
         }
     }

@@ -3,6 +3,7 @@ package sr.unasat.risicoguards.datastractures;
 public class Graph {
     public static final int MAX_VERTS = 20;
     public static final int INFINITY = 1000000;
+    public static final int NINFINITY = -1000000;
     private Vertex vertexList[]; //array of vertices
     private int adjMat[][]; //adjacency matrix
     private int nVerts; //current number of vertices
