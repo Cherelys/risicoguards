@@ -4,6 +4,7 @@ import sr.unasat.risicoguards.datastractures.DistPar;
 import sr.unasat.risicoguards.datastractures.Graph;
 
 import static sr.unasat.risicoguards.datastractures.Graph.INFINITY;
+import static sr.unasat.risicoguards.datastractures.Graph.MAX_VERTS;
 import static sr.unasat.risicoguards.datastractures.Graph.NINFINITY;
 
 public class Dijkstra {
@@ -17,8 +18,8 @@ public class Dijkstra {
     public Dijkstra(Graph graph) {
         this.graph = graph;
         nTree = 0;
-        sPath = new DistPar[Graph.MAX_VERTS];   // shortest paths
-        lPath = new DistPar[Graph.MAX_VERTS];   // longests paths
+        sPath = new DistPar[MAX_VERTS];   // shortest paths
+        lPath = new DistPar[MAX_VERTS];   // longests paths
     }
 
     public void shortestPath(){  //find all shortes path
@@ -189,29 +190,35 @@ public class Dijkstra {
 
     private void displayShortestPaths(){
         for (int j=0; j<graph.getnVerts(); j++){
-            System.out.print(graph.getVertexList()[0].label + "->");
-            System.out.print(graph.getVertexList()[j].label+ "="); //B=
+            graph.displayVertex(0); //name[type]
+            System.out.print( "->"); //name[type]->
+            graph.displayVertex(j); //name[type]->name[type]
+            System.out.print("="); //name[type]->name[type]=
             if (sPath[j].distance == INFINITY) {
                 System.out.print("(inf"); //inf
             }else {
                 System.out.print("(" + sPath[j].distance); //50
             }
-            char parent = graph.getVertexList()[sPath[j].parentVert].label;
-            System.out.print(" via "+ parent +"), "); //(A)
+            System.out.print("via ");
+            graph.displayVertex(sPath[j].parentVert);
+            System.out.print("), ");
         }
     }
 
     private void displayLongestPaths(){
         for (int j=0; j<graph.getnVerts(); j++){
-            System.out.print(graph.getVertexList()[0].label + "->");
-            System.out.print(graph.getVertexList()[j].label+ "="); //B=
+            graph.displayVertex(0); //name[type]
+            System.out.print( "->"); //name[type]->
+            graph.displayVertex(j); //name[type]->name[type]
+            System.out.print("="); //name[type]->name[type]=
             if (lPath[j].distance == NINFINITY) {
                 System.out.print("(inf"); //inf
             }else {
                 System.out.print("(" + lPath[j].distance); //50
             }
-            char parent = graph.getVertexList()[lPath[j].parentVert].label;
-            System.out.print(" via "+ parent +"), "); //(A)
+            System.out.print("via ");
+            graph.displayVertex(sPath[j].parentVert);
+            System.out.print("), ");
         }
     }
 

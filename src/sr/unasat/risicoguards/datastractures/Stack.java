@@ -1,12 +1,11 @@
 package sr.unasat.risicoguards.datastractures;
 
 public class Stack {
-    private final int SIZE = 20;
     private int[] st;
     private int top;
 
     public Stack(){
-        st = new int[SIZE];
+        st = new int[Graph.MAX_VERTS];
         top = -1;
     }
 

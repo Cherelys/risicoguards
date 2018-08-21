@@ -8,45 +8,51 @@ import sr.unasat.risicoguards.datastractures.Graph;
 public class App {
     public static void main(String[] args) {
 
-        //1. create graph
+        //Een security bedrijf heeft een daling gemerkt in het aantal bedrijven dat guards bij hun huurt.
+        // Na onderzoek blijkt dat dit is omdat ze meestal de verkeerde guards plaatsen bij bedrijven, posten of shifts.
+        //Zij willen daarom een systeem waarbij er automatisch aan de hand van de skillset van de guard
+        // de meest efficiënte shift van een post bij het juiste bedrijf gekozen wordt.
+
+
+        //Zij moeten dus bedrijven kunnen toevoegen met een bepaalde waarde,
+        // aan de bedrijven moeten zij ook posten kunnen toevoegen met een bepaalde waarde
+        // en ook moeten zij aan de posten ook shifts kunnen toevoegen met een bepaalde waarde.
+        // De waarde zal aan de hand van de risico hoog of laag zijn (0-10).
         Graph graph = new Graph();
-        graph.addVertex('A');
-        graph.addVertex('B');
-        graph.addVertex('C');
-        graph.addVertex('D');
-        graph.addVertex('E');
-        graph.addVertex('F');
-        graph.addVertex('G');
+        graph.generate();
 
-        graph.addEdge(0,1,1); //AB
-        graph.addEdge(0,3,6); //AD
-        graph.addEdge(1,2,5); //BC
-        graph.addEdge(3,4,4); //DE
-        graph.addEdge(3,5,2); //DF
-        graph.addEdge(4,6,3); //EG
-        graph.addEdge(5,6,9); //FG
 
-        //2. bfs searches
-        System.out.print("BFS Visits: ");
         BFS bfs = new BFS(graph);
-        bfs.search();
-        System.out.println();
-
-        //3. dfs searches
-        System.out.print("DFS Visits: ");
         DFS dfs = new DFS(graph);
-        dfs.search();
-        System.out.println();
+
+        //Zij moeten een overzicht krijgen van alle bedrijven
+        //bfs.displayAllCompanies();
+
+        //of enkel,
+        //dfs.displayCompany("Yin Long");
+
+        // een overzicht van alle posten
+        //bfs.displayAllPosts();
+
+        // of per gekozen bedrijf,
+        //dfs.displayPosts("Rosebel");
+
+        // en een overzicht van alle shifts
+        //bfs.displayAllShifts();
+
+        // of enkel van een post die natuurlijk is aangesloten bij een bedrijf.
+        //dfs.displayShifts("Productie");
+
 
         //4. dijkstra kort
-        System.out.print("Dijkstra kort: ");
-        Dijkstra dijkstra = new Dijkstra(graph);
-        dijkstra.shortestPath();
-        System.out.println();
-
-        //5. dijkstra lang
-        System.out.print("Dijkstra lang: ");
-        dijkstra.longestPath();
-        System.out.println();
+//        System.out.print("Dijkstra kort: ");
+//        Dijkstra dijkstra = new Dijkstra(graph);
+//        dijkstra.shortestPath();
+//        System.out.println();
+//
+//        //5. dijkstra lang
+//        System.out.print("Dijkstra lang: ");
+//        dijkstra.longestPath();
+//        System.out.println();
     }
 }

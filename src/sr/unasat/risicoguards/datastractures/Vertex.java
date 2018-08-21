@@ -1,12 +1,14 @@
 package sr.unasat.risicoguards.datastractures;
 
 public class Vertex {
-        public char label;
+        public String name;
+        public String type;
         public boolean wasVisited;
         public boolean isInTree;
 
-        public Vertex(char lab) {
-            label=lab;
+        public Vertex(String name, String type) {
+            this.name=name;
+            this.type=type;
             wasVisited = false;
             isInTree = false;
         }
