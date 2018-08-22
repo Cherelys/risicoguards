@@ -1,7 +1,6 @@
 package sr.unasat.risicoguards.algorithms;
 
-import sr.unasat.risicoguards.datastractures.DistPar;
-import sr.unasat.risicoguards.datastractures.Graph;
+import sr.unasat.risicoguards.datastractures.*;
 
 import static sr.unasat.risicoguards.datastractures.Graph.INFINITY;
 import static sr.unasat.risicoguards.datastractures.Graph.MAX_VERTS;
@@ -12,6 +11,7 @@ public class Dijkstra {
     private int currentVert; //current vertex
     private DistPar sPath[]; // array for shortest-path data
     private DistPar lPath[]; // array for longest-path data
+    private ShiPoCoDisGuard placedGuards[]; //array for placed guards
     private int nTree;     // number of Verts in tree
     private int startToCurrent; //distance to currentVert
 
@@ -20,6 +20,7 @@ public class Dijkstra {
         nTree = 0;
         sPath = new DistPar[MAX_VERTS];   // shortest paths
         lPath = new DistPar[MAX_VERTS];   // longests paths
+        placedGuards = new ShiPoCoDisGuard[MAX_VERTS];   // placed guards
     }
 
     public void shortestPath(){  //find all shortes path
@@ -222,4 +223,119 @@ public class Dijkstra {
         }
     }
 
+
+    public void placeGuards(PriorityQ guardQueue){
+        int startTree = 0;
+        int guardsPlaced = 0;
+        graph.getVertexList()[startTree].isInTree = true;
+        nTree = 1;
+
+        for (int j=0; j<graph.getnVerts(); j++){
+            int tempDist = graph.getAdjMat()[startTree][j]; //set temp distance accordign to adjacency matrix
+            tempDist = (tempDist == INFINITY) ? NINFINITY : tempDist;
+            lPath[j]= new DistPar(startTree,tempDist); //create new distpar and put in sPath
+        }
+
+        //until all vertices are in the tree
+        while (nTree < graph.getnVerts()){
+            int indexMax= getMax(); // get maximum from lPath
+            int maxDist = lPath[indexMax].distance;
+
+            if (maxDist == NINFINITY){ //if all infinite or in tree
+                System.out.println("there are unreachable vertices");
+                break; //lPath is complete
+            }else{
+                currentVert = indexMax; //reset current vert to closest vert
+                startToCurrent = lPath[indexMax].distance; //maximum distance from startTree is to currentVert, and is startToCurrent
+            }
+
+            if(graph.getVertexList()[currentVert].type == "shift"){
+
+                if(guardQueue.isEmpty()){
+                    System.out.println("No more guards to place");
+                }else{
+                    int shift = currentVert;
+                    int post = lPath[shift].parentVert;
+                    int company = lPath[post].parentVert;
+                    int distance = lPath[shift].distance;
+                    Guard guard = guardQueue.remove();
+
+                    placedGuards[guardsPlaced++] = new ShiPoCoDisGuard(shift, post, company, distance, guard);
+                }
+            }
+
+            //put current vertex in tree
+            graph.getVertexList()[currentVert].isInTree = true;
+            nTree++;
+            adjustsPathMax(); //update sPath[] array
+        }
+
+        displayPlacedGuards(); // display sPath[] contents
+
+        if(!guardQueue.isEmpty()){
+            System.out.println();
+            System.out.println("No more shifts to place guards, following guard(s) have not been placed:");
+
+            while (!guardQueue.isEmpty()){
+                System.out.print("- ");
+                guardQueue.remove().display();
+            }
+        }
+
+        doClear(); //clear for next algorithm use
+
+    }
+
+    private void displayPlacedGuards() {
+        for (int j=0; j < placedGuards.length; j++){
+            if(placedGuards[j] != null){
+                placedGuards[j].guard.display();
+                System.out.print(" bij: ");
+                graph.displayVertex(placedGuards[j].shift); System.out.print(", ");
+                graph.displayVertex(placedGuards[j].post); System.out.print(", ");
+                graph.displayVertex(placedGuards[j].company);
+                System.out.println();
+            }
+        }
+    }
+
+
+    public void cheapestShift() {
+        int startTree = 0;     // start at vertex 0
+        graph.getVertexList()[startTree].isInTree = true;
+        nTree = 1; //put in tree
+
+        // transfer row of distances from adjmat to spath
+        for (int j=0; j<graph.getnVerts(); j++){
+            int tempDist = graph.getAdjMat()[startTree][j];
+            sPath[j]= new DistPar(startTree,tempDist);
+        }
+
+        //until all vertices are in the tree
+        while (nTree < graph.getnVerts()){
+            int indexMin= getMin(); // get minimum from sPath
+            int minDist = sPath[indexMin].distance;
+
+            if (minDist== INFINITY){ //if all infinite or in tree
+                System.out.println("there are unreachable vertices");
+                break; //sPath is complete
+            }else{
+                currentVert = indexMin; //reset current vert to closest vert
+                startToCurrent = sPath[indexMin].distance; //minimum distance from startTree is to currentVert, and is startToCurrent
+            }
+
+            if(graph.getVertexList()[currentVert].type == "shift"){
+                System.out.print("Goedkoopste shift: ");
+                graph.displayVertex(currentVert);
+                break;
+            }
+
+            //put current vertex in tree
+            graph.getVertexList()[currentVert].isInTree = true;
+            nTree++;
+            adjustsPathMin(); //update sPath[] array
+        }
+
+        doClear(); //clear for next algorithm use
+    }
 }

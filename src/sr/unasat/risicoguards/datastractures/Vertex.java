@@ -5,11 +5,13 @@ public class Vertex {
         public String type;
         public boolean wasVisited;
         public boolean isInTree;
+        public boolean isFull;
 
         public Vertex(String name, String type) {
             this.name=name;
             this.type=type;
             wasVisited = false;
             isInTree = false;
+            isFull = false;
         }
 }
