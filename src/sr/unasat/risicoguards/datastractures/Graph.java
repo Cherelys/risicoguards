@@ -94,7 +94,7 @@ public class Graph {
         this.addEdge(3,7,8); //(Rosebel)Mine->Nacht
         this.addEdge(9,11,4); //(Kuldipsingh)Poort->Dag
         this.addEdge(9,12,6); //(Kuldipsingh)Poort->Nacht
-        this.addEdge(10,13,3); //(Kuldipsingh)Productie->Dag
+        this.addEdge(10,13,4); //(Kuldipsingh)Productie->Dag
         this.addEdge(10,14,5); //(Kuldipsingh)Productie->Nacht
         this.addEdge(16,18,5); //(YinLong)Kassa->Dag
         this.addEdge(16,19,8); //(YinLong)Kassa->Nacht

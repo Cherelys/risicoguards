@@ -300,7 +300,7 @@ public class Dijkstra {
     }
 
 
-    public void cheapestShift() {
+    public void cheapest(String type) {
         int startTree = 0;     // start at vertex 0
         graph.getVertexList()[startTree].isInTree = true;
         nTree = 1; //put in tree
@@ -324,9 +324,10 @@ public class Dijkstra {
                 startToCurrent = sPath[indexMin].distance; //minimum distance from startTree is to currentVert, and is startToCurrent
             }
 
-            if(graph.getVertexList()[currentVert].type == "shift"){
-                System.out.print("Goedkoopste shift: ");
+            if(graph.getVertexList()[currentVert].type.equals(type)){
+                System.out.print("Goedkoopste "+type+": ");
                 graph.displayVertex(currentVert);
+                System.out.println();
                 break;
             }
 
@@ -337,5 +338,46 @@ public class Dijkstra {
         }
 
         doClear(); //clear for next algorithm use
+    }
+
+    public void mostExpensive(String type){
+        int startTree = 0;
+        graph.getVertexList()[startTree].isInTree = true;
+        nTree = 1;
+
+        for (int j=0; j<graph.getnVerts(); j++){
+            int tempDist = graph.getAdjMat()[startTree][j]; //set temp distance accordign to adjacency matrix
+            tempDist = (tempDist == INFINITY) ? NINFINITY : tempDist;
+            lPath[j]= new DistPar(startTree,tempDist); //create new distpar and put in sPath
+        }
+
+        //until all vertices are in the tree
+        while (nTree < graph.getnVerts()){
+            int indexMax= getMax(); // get maximum from lPath
+            int maxDist = lPath[indexMax].distance;
+
+            if (maxDist == NINFINITY){ //if all infinite or in tree
+                System.out.println("there are unreachable vertices");
+                break; //lPath is complete
+            }else{
+                currentVert = indexMax; //reset current vert to closest vert
+                startToCurrent = lPath[indexMax].distance; //maximum distance from startTree is to currentVert, and is startToCurrent
+            }
+
+            if(graph.getVertexList()[currentVert].type.equals(type)){
+                System.out.print("Duurste "+type+": ");
+                graph.displayVertex(currentVert);
+                System.out.println();
+                break;
+            }
+
+            //put current vertex in tree
+            graph.getVertexList()[currentVert].isInTree = true;
+            nTree++;
+            adjustsPathMax(); //update sPath[] array
+        }
+
+        doClear(); //clear for next algorithm use
+
     }
 }

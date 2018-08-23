@@ -71,16 +71,21 @@ public class App {
         //Zij moeten ook heel makkelijk de goedkoopste of de duurste shift, post of bedrijf kunnen vinden.
 
         //goedkoopste shift
-        dijkstra.cheapestShift();
+        //dijkstra.cheapest("shift");
 
         //goedkoopste post
+        //dijkstra.cheapest("post");
 
         //goedkoopste bedrijf
+        //dijkstra.cheapest("company");
 
         //duurste shift
+        dijkstra.mostExpensive("shift");
 
         //duurste post
+        dijkstra.mostExpensive("post");
 
         //duurste bedrijf
+        dijkstra.mostExpensive("company");
     }
 }
